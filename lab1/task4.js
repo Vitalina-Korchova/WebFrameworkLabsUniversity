@@ -38,3 +38,4 @@ const fillingsArray = fillingsInput && fillingsInput.trim() !== ""
     : undefined;
 const price = calculatePriceIceCream(sizeInput || "", fillingsArray, (marshmallowInput === null || marshmallowInput === void 0 ? void 0 : marshmallowInput.toLowerCase()) === 'true');
 console.log(`Загальна ціна: ${price}`);
+//# sourceMappingURL=task4.js.map

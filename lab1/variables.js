@@ -15,3 +15,4 @@ const stringArray = ["Hello", "World", "TypeScript"];
 console.log(arrStrings);
 console.log(arrNumbs);
 console.log(stringArray);
+//# sourceMappingURL=variables.js.map

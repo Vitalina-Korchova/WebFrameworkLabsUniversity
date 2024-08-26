@@ -5,3 +5,4 @@ function testFunc(str, numb = 5) {
 }
 testFunc("Wow", 10);
 testFunc("hello");
+//# sourceMappingURL=function.js.map
