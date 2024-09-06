@@ -54,15 +54,15 @@ course2.registerStudent("Vitalina");
 course2.registerStudent("Petro");
 course3.registerStudent("Sasha");
 course3.registerStudent("Oleg");
-const foundCourse = courseManager.findCourse("Java");
-//const foundCourse =  courseManager.findCourse("Ruby");
-courseManager.listCourses();
+//const foundCourse =  courseManager.findCourse("Java");
+const foundCourse = courseManager.findCourse("Ruby");
+// courseManager.listCourses();
 if (foundCourse) {
     console.log(`Found course: ${foundCourse.courseName} with duration ${foundCourse.duration} hours.`);
 }
 else {
     console.log("Course not found.");
 }
-// courseManager.removeCourse("Python");
-// courseManager.listCourses();
+courseManager.removeCourse("Python");
+courseManager.listCourses();
 //# sourceMappingURL=task5.js.map
