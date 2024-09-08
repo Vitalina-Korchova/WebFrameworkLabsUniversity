@@ -5,7 +5,7 @@ import {LibraryService} from './services';
 // etc.
 
 class App {
-
+    
 }
 
 document.addEventListener('DOMContentLoaded', () => {
