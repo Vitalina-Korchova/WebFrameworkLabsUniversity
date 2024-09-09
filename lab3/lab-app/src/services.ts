@@ -85,4 +85,9 @@ export class LibraryService {
         users.forEach(user => this.userLibrary.addItem(new User(user.idUrser, user.nameUser, user.emailUser)));
         this.borrowStatus = borrowStatus;
     }
+
+    clearBooks(): void {
+        this.booksLibrary.clear(); 
+        this.saveData();
+    }
 }

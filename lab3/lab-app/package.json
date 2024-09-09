@@ -4,8 +4,10 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack serve --open"
+    "start": "webpack serve --open",
+    "build": "webpack --mode production",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -13,6 +15,11 @@
   },
   "private": true,
   "devDependencies": {
+    "css-loader": "^7.1.2",
+    "gh-pages": "^6.1.1",
+    "sass": "^1.78.0",
+    "sass-loader": "^16.0.1",
+    "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.94.0",

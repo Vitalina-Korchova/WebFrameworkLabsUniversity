@@ -11,4 +11,12 @@ export class Storage {
     static clearData(key: string): void {
         localStorage.removeItem(key);
     }
+
+    static saveElementState(key: string, html: string): void {
+        localStorage.setItem(key, html);
+    }
+
+    static loadElementState(key: string): string {
+        return localStorage.getItem(key) || '';
+    }
 }

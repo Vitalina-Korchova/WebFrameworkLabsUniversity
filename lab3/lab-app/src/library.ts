@@ -18,4 +18,7 @@ export class Library<T> {
         this.items = this.items.filter(item => !predicate(item));
     }
 
+    clear(): void {
+        this.items.length = 0; // Очищення масиву
+    }
 }
