@@ -15,7 +15,7 @@ export class Book implements IBook {
    }
 
    printInfo(): string {
-       return `${this.nameBook} by ${this.authorBook}(${this.releaseYearBook})`;
+       return `${this.nameBook} by ${this.authorBook} (${this.releaseYearBook})`;
    }
 
 }
@@ -37,6 +37,6 @@ export class User implements IUser {
     }
 
     printInfo(): string {
-        return `${this.idUrser} ${this.nameUser} ${this.emailUser}`;
+        return `ID: ${this.idUrser},  ${this.nameUser} ${this.emailUser}`;
     }
 }

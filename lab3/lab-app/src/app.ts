@@ -11,17 +11,27 @@ class App {
     constructor (){
         this.libraryService = new LibraryService();
         console.log (this.libraryService.getAllBooks());
+        console.log (this.libraryService.getAllUsers());
         this.loadDataFromLocalStorage();
         this.blockBooks();
+        this.blockUsers();
     }
 
     loadDataFromLocalStorage():void{
-        // Завантаження збережених елементів з localStorage
+        // Завантаження збережених елементів з localStorage книги
         const savedBooksHTML = Storage.loadElementState('book_items');
         const containerBooks = document.querySelector('.book_items');
         if (containerBooks && savedBooksHTML) {
             containerBooks.innerHTML = savedBooksHTML;
         }
+
+        // Завантаження збережених елементів з localStorage книги  юзери
+        const savedUsersHTML = Storage.loadElementState('user_items');
+        const containerUsers = document.querySelector('.user_items');
+        if (containerUsers && savedUsersHTML) {
+            containerUsers.innerHTML = savedUsersHTML;
+        }
+
     }
 
     blockBooks():void{
@@ -70,6 +80,8 @@ class App {
     }
 
     blockUsers():void{
+
+        let userIdCounter = 1;  //айді юзерів 
         document.querySelector('.btn_clear_users')?.addEventListener('click', ()=>{
             this.libraryService.clearUsers();
             const containerUsers = document.querySelector('.user_items');
@@ -80,6 +92,37 @@ class App {
              Storage.clearData('user_items');
         });
 
+        document.querySelector('.input_add_user')?.addEventListener('click', ()=>{
+            //console.log('Add book button clicked');
+            const containerUsers = document.querySelector('.user_items');
+            const nameUser = (document.querySelector('.input_username') as HTMLInputElement)?.value;    //перевторення на строки
+            const emailUser = (document.querySelector('.input_email') as HTMLInputElement)?.value;
+            const idUser = userIdCounter++;
+
+            const user = new User(idUser,nameUser,emailUser);
+            this.libraryService.addUser(user);
+           
+            //створення елемента
+            const userItem = document.createElement('div');
+            const innerUser = document.createElement('div');
+            innerUser.classList.add('d-flex', 'justify-content-between');
+            const textElement = document.createElement('span');
+            textElement.textContent = user.printInfo();        //функція виведення інфи
+            textElement.classList.add('fs-5');
+            const buttonStatus = document.createElement('button');
+            buttonStatus.textContent = "Позичити";
+            const line = document.createElement('hr');
+            innerUser.appendChild(textElement);
+            innerUser.appendChild(buttonStatus);
+            userItem.appendChild(innerUser);
+            userItem.appendChild(line);
+            containerUsers?.appendChild(userItem);
+
+
+             // збереження HTML елементів у localStorage
+             Storage.saveElementState('user_items', containerUsers?.innerHTML || '');
+            }    
+        );
         
     }
 
