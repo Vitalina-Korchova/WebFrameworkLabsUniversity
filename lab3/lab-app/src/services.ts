@@ -89,5 +89,12 @@ export class LibraryService {
     clearBooks(): void {
         this.booksLibrary.clear(); 
         this.saveData();
+        Storage.clearData('book_items');
+    }
+
+    clearUsers():void{
+        this.userLibrary.clear();
+        this.saveData();
+        Storage.clearData('user_items');
     }
 }
