@@ -2,7 +2,7 @@
 import {Book, User} from './models';
 import {LibraryService} from './services';
 import { Storage } from './storage';
-import { ValidationBook } from './validation';
+import { ValidationBook, ValidationUser } from './validation';
 // etc.
 
 class App {
@@ -88,6 +88,7 @@ class App {
     blockUsers():void{
 
         let userIdCounter = 1;  //айді юзерів 
+
         document.querySelector('.btn_clear_users')?.addEventListener('click', ()=>{
             this.libraryService.clearUsers();
             const containerUsers = document.querySelector('.user_items');
@@ -98,33 +99,37 @@ class App {
              Storage.clearData('user_items');
         });
 
-        document.querySelector('.input_add_user')?.addEventListener('click', ()=>{
-            //console.log('Add book button clicked');
+        document.querySelector('.input_add_user')?.addEventListener('click', (event)=>{
+            event.preventDefault(); 
             const containerUsers = document.querySelector('.user_items');
             const nameUser = (document.querySelector('.input_username') as HTMLInputElement)?.value;    //перевторення на строки
             const emailUser = (document.querySelector('.input_email') as HTMLInputElement)?.value;
-            const idUser = userIdCounter++;
+            
 
-            const user = new User(idUser,nameUser,emailUser);
-            this.libraryService.addUser(user);
+            if(ValidationUser()){
+                const idUser = userIdCounter++;
+                const user = new User(idUser,nameUser,emailUser);
+                this.libraryService.addUser(user);
+               
+                //створення елемента
+                const userItem = document.createElement('div');
+                const innerUser = document.createElement('div');
+                innerUser.classList.add('d-flex', 'justify-content-between');
+                const textElement = document.createElement('span');
+                textElement.textContent = user.printInfo();        //функція виведення інфи
+                textElement.classList.add('fs-5');
+                const line = document.createElement('hr');
+                innerUser.appendChild(textElement);
+                userItem.appendChild(innerUser);
+                userItem.appendChild(line);
+                containerUsers?.appendChild(userItem);
+    
+    
+                 // збереження HTML елементів у localStorage
+                 Storage.saveElementState('user_items', containerUsers?.innerHTML || '');
+            }
            
-            //створення елемента
-            const userItem = document.createElement('div');
-            const innerUser = document.createElement('div');
-            innerUser.classList.add('d-flex', 'justify-content-between');
-            const textElement = document.createElement('span');
-            textElement.textContent = user.printInfo();        //функція виведення інфи
-            textElement.classList.add('fs-5');
-            const line = document.createElement('hr');
-            innerUser.appendChild(textElement);
-            userItem.appendChild(innerUser);
-            userItem.appendChild(line);
-            containerUsers?.appendChild(userItem);
-
-
-             // збереження HTML елементів у localStorage
-             Storage.saveElementState('user_items', containerUsers?.innerHTML || '');
-            }    
+        }    
         );
         
     }

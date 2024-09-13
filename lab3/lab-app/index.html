@@ -11,7 +11,7 @@
     <div class="content">
         <h2  class="my-4  d-flex justify-content-center  fw-bold" >Система Управління Бібліотекою</h2> <!--  m - margin y-both -->
   
-        <form class="add_book_block mx-5 py-4 px-4 bg-white text-dark d-flex flex-column mb-5 row-gap-3 rounded shadow needs-validation" novalidate>
+        <form class="add_book_block mx-5 py-4 px-4 bg-white text-dark d-flex flex-column mb-5 row-gap-3 rounded shadow needs-validation-book" novalidate>
             <h4 class="fw-bold">Додати книгу</h4>
             
             <div class="form-group">
@@ -32,13 +32,24 @@
             <button type="submit" class="input_add_book btn btn-success" style="width: 150px;">Додати книгу</button>
         </form>
 
-        <div class="add_user  mx-5 my-5 py-4 px-4  bg-white text-dark  d-flex flex-column mb-4  row-gap-3  rounded  shadow">
-            <h4 class="fw-bold">Додати користувача</h4>
-            <input class="input_username  form-control" type="text" placeholder="Ім'я">
-            <input class="input_email  form-control" type="text" placeholder="Email">
-            <button type="button" class="input_add_user  btn btn-success " style="width: 200px;">Додати користувача</button>
-        </div>
+        <form class="add_user  mx-5 my-5 py-4 px-4  bg-white text-dark  d-flex flex-column mb-4  row-gap-3  rounded  shadow  needs-validation-user" novalidate>
 
+            <h4 class="fw-bold">Додати користувача</h4>
+
+            <div class="form-group">
+                <input class="input_username  form-control" type="text" placeholder="Ім'я" required>
+                <div class="invalid-feedback">Введіть ім'я користувача!</div>
+            </div>
+           
+            <div class="form-group">
+                <input class="input_email  form-control" type="text" placeholder="Email" required>
+                <div class="invalid-feedback">Введіть email користувача!</div>
+            </div>
+
+            <button type="submit" class="input_add_user  btn btn-success " style="width: 200px;">Додати користувача</button>
+        </form>
+
+        
         <div class="list_books  mx-5 my-5 py-4 px-4  bg-white text-dark  rounded  shadow">
             <div class="text_btn_book  mb-4  d-flex justify-content-between">
                 <h4 class="fw-bold">Список книг</h4>

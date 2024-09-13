@@ -1,5 +1,5 @@
 export function ValidationBook(): boolean {
-    const formElements = document.querySelectorAll('.needs-validation');
+    const formElements = document.querySelectorAll('.needs-validation-book');
     let isValid = true;
 
     formElements.forEach(function (formElem) {
@@ -13,7 +13,7 @@ export function ValidationBook(): boolean {
             const releaseYearFeedback = formElem.querySelector('.input_release_year + .invalid-feedback') as HTMLElement;
 
             if (releaseYearInput && releaseYearFeedback) {
-                releaseYearInput.addEventListener('input', function () {
+                releaseYearInput.addEventListener('input', function () {    //зроблено в такий спосіб, щоб помилка висвічувалась при вводі
                     validateReleaseYear(releaseYearInput, releaseYearFeedback);
                 });
 
@@ -55,5 +55,48 @@ function validateReleaseYear(releaseYearInput: HTMLInputElement, releaseYearFeed
         releaseYearInput.setCustomValidity('');
     }
 
+    return isValid;
+}
+
+
+export function ValidationUser(): boolean {
+    const formElements = document.querySelectorAll('.needs-validation-user');
+    let isValid = true;
+
+    formElements.forEach(function (formElem) {
+        
+        if (formElem instanceof HTMLFormElement) {
+            if (!formElem.checkValidity()) {
+                isValid = false;
+            }
+
+
+            const emailInput = formElem.querySelector('.input_email') as HTMLInputElement;
+            const emailFeedback = formElem.querySelector('.input_email + .invalid-feedback') as HTMLElement;
+            const regEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if(emailInput && emailFeedback){
+                emailInput.addEventListener('input', function(){
+                    if(!regEmail.test(emailInput.value.trim())){
+                        emailFeedback.textContent = "Введіть правильний email!";
+                        emailInput.setCustomValidity('invalid');
+                        isValid = false;
+                    }
+                    else{
+                        emailInput.classList.add('was-validated');
+                        emailFeedback.textContent = '';
+                        emailInput.setCustomValidity('');
+                    }
+                })
+            }
+
+            formElem.classList.add('was-validated');
+
+            if (isValid) {
+                formElem.reset();
+                formElem.classList.remove('was-validated'); 
+            }
+        }
+    });
     return isValid;
 }
