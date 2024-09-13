@@ -3,6 +3,7 @@ import {Book, User} from './models';
 import {LibraryService} from './services';
 import { Storage } from './storage';
 import { ValidationBook, ValidationUser } from './validation';
+import { Modal } from './modal';
 // etc.
 
 class App {
@@ -68,6 +69,7 @@ class App {
                 buttonStatus.textContent = "Позичити";
                 buttonStatus.type = 'button';
                 buttonStatus.classList.add('btnBorrowOff','btn', 'btn-primary', 'btn-sm');
+                Modal.showBorrowModal(buttonStatus); //показується модальне вікно
                 const line = document.createElement('hr');
                 innerItem.appendChild(textElement);
                 innerItem.appendChild(buttonStatus);
