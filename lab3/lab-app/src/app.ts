@@ -27,6 +27,8 @@ class App {
             containerBooks.innerHTML = savedBooksHTML;
         }
 
+        this.blockModal();
+
         // Завантаження збережених елементів з localStorage книги  юзери
         const savedUsersHTML = Storage.loadElementState('user_items');
         const containerUsers = document.querySelector('.user_items');
@@ -69,7 +71,7 @@ class App {
                 buttonStatus.textContent = "Позичити";
                 buttonStatus.type = 'button';
                 buttonStatus.classList.add('btnBorrowOff','btn', 'btn-primary', 'btn-sm');
-                Modal.showBorrowModal(buttonStatus); //показується модальне вікно
+                Modal.showBorrowModal(buttonStatus);
                 const line = document.createElement('hr');
                 innerItem.appendChild(textElement);
                 innerItem.appendChild(buttonStatus);
@@ -80,6 +82,8 @@ class App {
 
                 // збереження HTML елементів у localStorage
                 Storage.saveElementState('book_items', containerBooks?.innerHTML || '');
+
+                this.blockModal();
             }
             
             
@@ -87,38 +91,45 @@ class App {
         );
     }
 
-    blockUsers():void{
-
-        let userIdCounter = 1;  //айді юзерів 
-
-        document.querySelector('.btn_clear_users')?.addEventListener('click', ()=>{
+    blockUsers(): void {
+        let userIdCounter = parseInt(localStorage.getItem('lastUserId') || '0') + 1;
+    
+        const resetUserCounter = () => {
+            localStorage.removeItem('lastUserId');
+            userIdCounter = 1;
+        };
+    
+        document.querySelector('.btn_clear_users')?.addEventListener('click', () => {
             this.libraryService.clearUsers();
             const containerUsers = document.querySelector('.user_items');
             if (containerUsers) {
                 containerUsers.innerHTML = '';  
             }
-
-             Storage.clearData('user_items');
+            Storage.clearData('user_items');
+            resetUserCounter();
         });
-
-        document.querySelector('.input_add_user')?.addEventListener('click', (event)=>{
+    
+        document.querySelector('.input_add_user')?.addEventListener('click', (event) => {
             event.preventDefault(); 
             const containerUsers = document.querySelector('.user_items');
-            const nameUser = (document.querySelector('.input_username') as HTMLInputElement)?.value;    //перевторення на строки
+            const nameUser = (document.querySelector('.input_username') as HTMLInputElement)?.value;
             const emailUser = (document.querySelector('.input_email') as HTMLInputElement)?.value;
             
-
             if(ValidationUser()){
+                //перевіряєм чи контейнер пустий
+                if (!containerUsers?.innerHTML.trim()) {
+                    resetUserCounter();
+                }
+    
                 const idUser = userIdCounter++;
-                const user = new User(idUser,nameUser,emailUser);
+                const user = new User(idUser, nameUser, emailUser);
                 this.libraryService.addUser(user);
                
-                //створення елемента
                 const userItem = document.createElement('div');
                 const innerUser = document.createElement('div');
                 innerUser.classList.add('d-flex', 'justify-content-between');
                 const textElement = document.createElement('span');
-                textElement.textContent = user.printInfo();        //функція виведення інфи
+                textElement.textContent = user.printInfo();
                 textElement.classList.add('fs-5');
                 const line = document.createElement('hr');
                 innerUser.appendChild(textElement);
@@ -126,17 +137,55 @@ class App {
                 userItem.appendChild(line);
                 containerUsers?.appendChild(userItem);
     
-    
-                 // збереження HTML елементів у localStorage
-                 Storage.saveElementState('user_items', containerUsers?.innerHTML || '');
+                // Сохраняем HTML элементы и последний использованный ID в localStorage
+                Storage.saveElementState('user_items', containerUsers?.innerHTML || '');
+                localStorage.setItem('lastUserId', idUser.toString());
             }
-           
-        }    
-        );
-        
+        });
     }
 
+    blockModal(): void {
+        const buttonsBorrow = document.querySelectorAll('.btnBorrowOff');
+        let activeBookButton: HTMLElement | null = null;  
+    
+        buttonsBorrow.forEach(button => {
+           
+            Modal.showBorrowModal(button as HTMLElement);
+    
+           
+            button.addEventListener('click', () => {
+                activeBookButton = button as HTMLElement;  
+                const bookFullText = button.closest('div')?.querySelector('span')?.textContent?.trim() || ''; 
+                const [bookName] = bookFullText.split(' by ');
+                activeBookButton.setAttribute('data-book', bookName);  
+    
+            });
+        });
+    
 
+        const btnSave = document.getElementById('btn_save') as HTMLElement;
+        const inputIdUser = document.getElementById('input_borrow') as HTMLInputElement;
+    
+        btnSave.addEventListener('click', () => {
+            if (!activeBookButton) {
+                console.error('Немає активної кнопки позичення.');
+                return;
+            }
+    
+            const userId = inputIdUser.value.trim();  
+            const bookName = activeBookButton.getAttribute('data-book');  
+        
+            if (userId && bookName) {
+                const isBorrowed = this.libraryService.borrowBook(bookName, parseInt(userId));
+                if (isBorrowed) {
+                    activeBookButton.textContent = 'Повернути';
+                    activeBookButton.classList.replace('btn-primary', 'btn-warning');
+                    
+                    Modal.hideBorrowModal();
+                }
+            }
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

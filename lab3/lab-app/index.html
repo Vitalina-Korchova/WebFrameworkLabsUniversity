@@ -70,6 +70,7 @@
     </div>
     
     <!-- Modals -->
+     <!-- Модалка при позичанні книги -->
     <div class="modal"  id="modalBorrow">
         <div class="modal-dialog  shadow">
           <div class="modal-content">
@@ -77,15 +78,43 @@
               <h5 class="modal-title">Введіть ID користувача для позичення книги:</h5>
             </div>
             <div class="modal-body">
-              <input class="input_borrow  form-control" type="text" name="" id="" required>
+              <input id="input_borrow" class="form-control" type="text" name="" id="" required>
             </div>
             <div class="modal-footer">
               <button type="button" id="btn_close_modal" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-              <button type="button" class="btn btn-primary">Зберегти</button>
+              <button type="button" id="btn_save" class="btn btn-primary">Зберегти</button>
             </div>
           </div>
         </div>
     </div>
+
+    <!-- Модалка про Успіх -->
+    <div class="modal"  id="modalBorrowSuccess">
+      <div class="modal-dialog  shadow">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Успіх! Книга була позичена!</h5>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="btn_close_modal_success" class="btn btn-primary">Зрозуміло!</button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <!-- Модалка про Помилку -->
+  <div class="modal"  id="modalBorrowFail">
+    <div class="modal-dialog  shadow">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Помилка! Користувач з такийм ID вже позичив 3 книги!</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn_close_modal_fail" class="btn btn-primary">Закрити</button>
+        </div>
+      </div>
+    </div>
+  </div>
     
     <script  src="./dist/bundle.js"></script>
 </body>

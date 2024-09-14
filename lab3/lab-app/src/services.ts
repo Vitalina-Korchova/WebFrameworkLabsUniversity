@@ -1,6 +1,7 @@
 import {Book, User, IBook, IUser} from './models';
 import {Library} from './library';
 import { Storage } from './storage';
+import { Modal } from './modal';
 
 export class LibraryService {
     private booksLibrary: Library<Book> = new Library();
@@ -39,25 +40,49 @@ export class LibraryService {
     }
 
 
-    borrowBook(bookName:string, idUser:number):boolean{
-        if (this.borrowStatus[bookName]) {
-            return false; // книга вже позичена 
+    borrowBook(bookName: string, idUser: number): boolean {
+
+        const user = this.findUser(u => u.idUser === idUser);
+        const book = this.findBook(b => b.nameBook === bookName);
+    
+        console.log(`Found Book: ${book ? book.nameBook : 'Not Found'}`);
+        console.log(`Found User: ${user ? user.idUser : 'Not Found'}`);
+    
+        
+        if (user && user.borrowedBooksCount >= 3) {
+            Modal.showErrorModal();  
+            Modal.hideBorrowModal();
+            return false;
         }
-
-        const book = this.findBook(b => b.printInfo().includes(bookName));
-        const user = this.findUser(u => u.printInfo().startsWith(idUser.toString()));
-
+    
+        
+        if (this.borrowStatus[bookName]) {
+            console.log("The book is already borrowed.");
+            return false; 
+        }
+    
+    
         if (book && user) {
-            this.borrowStatus[bookName] = idUser;
-            this.saveData();
+            user.borrowedBooksCount++;  
+            this.borrowStatus[bookName] = idUser;  
+            this.saveData();  
+            Modal.showSuccessModal();  
             return true;
         }
-
+    
+        
         return false;
     }
+    
+
 
     returnBook(bookName: string): boolean {
-        if (this.borrowStatus[bookName]) {
+        const userId = this.borrowStatus[bookName];
+        if (userId) {
+            const user = this.findUser(u => u.idUser === userId);
+            if (user) {
+                user.borrowedBooksCount--;
+            }
             delete this.borrowStatus[bookName];
             this.saveData();
             return true;
@@ -76,25 +101,48 @@ export class LibraryService {
         Storage.saveData('borrowStatus', this.borrowStatus);
     }
 
-    private loadData():void{
-        const books: Book[] = Storage.loadData('books');
-        const users: User[] = Storage.loadData('users');
-        const borrowStatus: { [bookName: string]: number } = Storage.loadData('borrowStatus');
+    private loadData(): void {
+        const books: Book[] = Storage.loadData('books') || [];
+        const users: User[] = Storage.loadData('users') || [];
+        this.borrowStatus = Storage.loadData('borrowStatus') || {};
 
-        books.forEach(book => this.booksLibrary.addItem(new Book(book.nameBook, book.authorBook, book.releaseYearBook)));
-        users.forEach(user => this.userLibrary.addItem(new User(user.idUrser, user.nameUser, user.emailUser)));
-        this.borrowStatus = borrowStatus;
+        this.booksLibrary.clear();
+        this.userLibrary.clear();
+
+        books.forEach(bookData => {
+            const book = new Book(bookData.nameBook, bookData.authorBook, bookData.releaseYearBook);
+            this.booksLibrary.addItem(book);
+        });
+
+        users.forEach(userData => {
+            const user = new User(userData.idUser, userData.nameUser, userData.emailUser);
+            user.borrowedBooksCount = 0; 
+            this.userLibrary.addItem(user);
+        });
+
+        // Обновляем borrowedBooksCount на основе borrowStatus
+        Object.values(this.borrowStatus).forEach(userId => {
+            const user = this.findUser(u => u.idUser === userId);
+            if (user) {
+                user.borrowedBooksCount++;
+            }
+        });
     }
+
 
     clearBooks(): void {
         this.booksLibrary.clear(); 
+        this.borrowStatus = {};
         this.saveData();
         Storage.clearData('book_items');
     }
 
-    clearUsers():void{
+    clearUsers(): void {
         this.userLibrary.clear();
+        this.borrowStatus = {};
         this.saveData();
         Storage.clearData('user_items');
     }
+
+    
 }

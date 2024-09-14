@@ -26,17 +26,18 @@ export interface IUser {
 
 export class User implements IUser {
 
-    idUrser:number;
+    idUser:number;
     nameUser:string;
     emailUser:string;
+    borrowedBooksCount: number = 0;
 
-    constructor (idUrser:number, nameUser:string, emailUser:string){
-        this.idUrser = idUrser;
+    constructor (idUser:number, nameUser:string, emailUser:string){
+        this.idUser = idUser;
         this.nameUser = nameUser;
         this.emailUser = emailUser;
     }
 
     printInfo(): string {
-        return `ID: ${this.idUrser},  ${this.nameUser} ${this.emailUser}`;
+        return `ID: ${this.idUser},  ${this.nameUser} ${this.emailUser}    Позичено книг - ${this.borrowedBooksCount}`;
     }
 }
