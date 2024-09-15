@@ -38,6 +38,6 @@ export class User implements IUser {
     }
 
     printInfo(): string {
-        return `ID: ${this.idUser},  ${this.nameUser} ${this.emailUser}    Позичено книг - ${this.borrowedBooksCount}`;
+        return `ID: ${this.idUser},  ${this.nameUser} ${this.emailUser}  Позичено книг - ${this.borrowedBooksCount}`;
     }
 }

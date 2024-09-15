@@ -81,14 +81,15 @@ export class LibraryService {
         if (userId) {
             const user = this.findUser(u => u.idUser === userId);
             if (user) {
-                user.borrowedBooksCount--;
+                user.borrowedBooksCount--;  // Зменшення кількості позичених книг
             }
-            delete this.borrowStatus[bookName];
-            this.saveData();
+            delete this.borrowStatus[bookName];  // Видалення статусу позиченої книги
+            this.saveData();  // Збереження оновлених даних
             return true;
         }
         return false;
     }
+    
 
     getBorrowedBooks(): { bookName: string, userId: number }[] {
         return Object.entries(this.borrowStatus).map(([bookName, userId]) => ({ bookName, userId }));
@@ -120,11 +121,11 @@ export class LibraryService {
             this.userLibrary.addItem(user);
         });
 
-        // Обновляем borrowedBooksCount на основе borrowStatus
+         // Оновлення кількості позичених книг на основі borrowStatus
         Object.values(this.borrowStatus).forEach(userId => {
             const user = this.findUser(u => u.idUser === userId);
             if (user) {
-                user.borrowedBooksCount++;
+                user.borrowedBooksCount++;  // Збільшуємо кількість позичених книг
             }
         });
     }
