@@ -70,6 +70,7 @@ class App {
             buttonStatus.style.display = 'none';
             const returnButton = this.createReturnButton(book.nameBook, borrowStatus.userId);
             innerItem.appendChild(returnButton);
+            innerItem.classList.add('flex-row-reverse');
         } else {
             Modal.showBorrowModal(buttonStatus);
         }
