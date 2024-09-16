@@ -95,6 +95,9 @@ export class LibraryService {
         return Object.entries(this.borrowStatus).map(([bookName, userId]) => ({ bookName, userId }));
     }
 
+    //Метод Object.entries приймає об'єкт (в даному випадку this.borrowStatus) 
+    //і повертає масив пар [ключ, значення], де кожна пара є масивом, що представляє ключ і значення з об'єкта
+
     
     private saveData():void{
         Storage.saveData('books', this.booksLibrary.getAllItems());

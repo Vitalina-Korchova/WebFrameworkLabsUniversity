@@ -15,15 +15,15 @@ class App {
         this.loadDataFromLocalStorage();
         this.renderBooks();
         this.renderUsers();
-        this.setupEventListeners();
+        this.setupEventListeners();  //налаштування обробника подій
     }
 
     private loadDataFromLocalStorage(): void {
-        // Load books and users from LibraryService (which loads from localStorage)
+        //перевірка масивів
         console.log(this.libraryService.getAllBooks());
         console.log(this.libraryService.getAllUsers());
         
-        // Render books and users
+        // показ книжок та юзерів  оновлення інтерфейсу
         this.renderBooks();
         this.renderUsers();
     }
@@ -31,7 +31,7 @@ class App {
     private renderBooks(): void {
         const containerBooks = document.querySelector('.book_items');
         if (containerBooks) {
-            containerBooks.innerHTML = '';
+            containerBooks.innerHTML = ''; //очищаємо контейнер
             this.libraryService.getAllBooks().forEach(book => {
                 this.renderBookItem(book, containerBooks);
             });
@@ -65,6 +65,8 @@ class App {
         buttonStatus.type = 'button';
         buttonStatus.classList.add('btnBorrowOff', 'btn', 'btn-primary', 'btn-sm');
 
+        //перевірка чи позичена книга
+        //перевіряється чи є запис про те, що книга вже позичена
         const borrowStatus = this.libraryService.getBorrowedBooks().find(b => b.bookName === book.nameBook);
         if (borrowStatus) {
             buttonStatus.style.display = 'none';
@@ -116,7 +118,7 @@ class App {
         const clearBooksButton = document.querySelector('.btn_clear_books');
 
         if (addBookButton) {
-            addBookButton.addEventListener('click', this.handleAddBook.bind(this));
+            addBookButton.addEventListener('click', this.handleAddBook.bind(this)); //прив'язаний до контексту класу App
         }
 
         if (clearBooksButton) {
@@ -138,7 +140,7 @@ class App {
     }
 
     private setupModalListeners(): void {
-        document.addEventListener('click', (event) => {
+        document.addEventListener('click', (event) => {   //реагує на всі кліки
             const target = event.target as HTMLElement;
             if (target.classList.contains('btnBorrowOff')) {
                 this.handleBorrowButtonClick(target);
@@ -191,18 +193,18 @@ class App {
     }
 
     private handleBorrowButtonClick(button: HTMLElement): void {
-        const bookItem = button.closest('.book-item');
-        if (bookItem) {
-            const bookName = (bookItem as HTMLElement).dataset.bookName;
+        const bookItem = button.closest('.book-item');  //повертає найближчого батьків елмент 
+        if (bookItem) { 
+            const bookName = (bookItem as HTMLElement).dataset.bookName;  //Отримання значення атрибута data-book-name з елемента bookItem
             if (bookName) {
-                (button as HTMLElement).dataset.bookName = bookName;
+                (button as HTMLElement).dataset.bookName = bookName;  //дозволяє кнопці зберігати інформацію про книгу, яка прив'язана до цієї кнопки.
             }
         }
     }
     
 
     private handleReturnButtonClick(button: HTMLElement): void {
-        const bookName = button.dataset.bookName;
+        const bookName = button.dataset.bookName;   //отримує значення атрибута data-book-name з кнопки. Цей атрибут містить ім'я книги, яка повертається
         const userId = button.dataset.userId;
         if (bookName && userId) {
             this.libraryService.returnBook(bookName);
@@ -242,7 +244,7 @@ class App {
     private updateUserBorrowedCount(userId: number): void {
         const user = this.libraryService.findUser(u => u.idUser === userId);
         if (user) {
-            const userItem = document.querySelector(`.user-item[data-user-id="${userId}"]`);
+            const userItem = document.querySelector(`.user-item[data-user-id="${userId}"]`); //використовується для знаходження HTML-елемента з класом user-item і атрибутом data-user-id, що відповідає userId
             if (userItem) {
                 const textElement = userItem.querySelector('span');
                 if (textElement) {

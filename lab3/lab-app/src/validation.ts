@@ -64,30 +64,24 @@ export function ValidationUser(): boolean {
     let isValid = true;
 
     formElements.forEach(function (formElem) {
-        
         if (formElem instanceof HTMLFormElement) {
             if (!formElem.checkValidity()) {
                 isValid = false;
             }
 
-
             const emailInput = formElem.querySelector('.input_email') as HTMLInputElement;
             const emailFeedback = formElem.querySelector('.input_email + .invalid-feedback') as HTMLElement;
-            const regEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            if(emailInput && emailFeedback){
-                emailInput.addEventListener('input', function(){
-                    if(!regEmail.test(emailInput.value.trim())){
-                        emailFeedback.textContent = "Введіть правильний email!";
-                        emailInput.setCustomValidity('invalid');
+            if (emailInput && emailFeedback) {
+                emailInput.addEventListener('input', function () {
+                    if (!validateEmail(emailInput, emailFeedback)) {
                         isValid = false;
                     }
-                    else{
-                        emailInput.classList.add('was-validated');
-                        emailFeedback.textContent = '';
-                        emailInput.setCustomValidity('');
-                    }
-                })
+                });
+
+                if (!validateEmail(emailInput, emailFeedback)) {
+                    isValid = false;
+                }
             }
 
             formElem.classList.add('was-validated');
@@ -98,5 +92,24 @@ export function ValidationUser(): boolean {
             }
         }
     });
+
+    return isValid;
+}
+
+function validateEmail(emailInput: HTMLInputElement, emailFeedback: HTMLElement): boolean {
+    const emailValue = emailInput.value.trim();
+    const regEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    let isValid = true;
+
+    if (!regEmail.test(emailValue)) {
+        emailFeedback.textContent = "Введіть правильний email!";
+        emailInput.setCustomValidity('invalid');
+        isValid = false;
+    } else {
+        emailInput.classList.add('was-validated');
+        emailFeedback.textContent = '';
+        emailInput.setCustomValidity('');
+    }
+
     return isValid;
 }
